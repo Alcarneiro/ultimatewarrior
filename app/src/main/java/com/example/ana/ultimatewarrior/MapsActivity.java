@@ -43,6 +43,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        // Make sure this is before calling super.onCreate
+        setTheme(R.style.AppTheme);
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
 
@@ -90,9 +93,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         latlngs.add(getRandomLatLng());
 
         for (LatLng point : latlngs) {
+            int distance = CalculationByDistance(new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude()), point);
             mMap.addMarker(new MarkerOptions()
-                    .title("NAME THE MARKER POINT")
-                    .snippet("DESCRIPTION FOR MARKER HERE.")
+                    .title("Silver mine")
+                    .snippet("distance: " + String.valueOf(distance) + "m")
                     .position(point));
         }
     }
@@ -164,7 +168,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         //move map camera
         mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
-        mMap.animateCamera(CameraUpdateFactory.zoomTo(12));
+        mMap.animateCamera(CameraUpdateFactory.zoomTo(16));
 
         //stop location updates
         if (mGoogleApiClient != null) {
@@ -244,5 +248,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             // other 'case' lines to check for other permissions this app might request.
             // You can add here other case statements according to your requirement.
         }
+    }
+
+    /* calculate distance between 2 points */
+    public int CalculationByDistance(LatLng StartP, LatLng EndP) {
+        float[] results = new float[1];
+        Location.distanceBetween(StartP.latitude, StartP.longitude, EndP.latitude, EndP.longitude, results);
+
+        return (int) results[0];
     }
 }
