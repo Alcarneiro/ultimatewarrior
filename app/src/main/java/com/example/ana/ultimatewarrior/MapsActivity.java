@@ -1,6 +1,7 @@
 package com.example.ana.ultimatewarrior;
 
 import android.Manifest;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Build;
@@ -8,6 +9,7 @@ import android.os.Bundle;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
+import android.view.View;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -38,8 +40,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     Marker mCurrLocationMarker;
     LocationRequest mLocationRequest;
     private GoogleMap mMap;
-    private MarkerOptions options = new MarkerOptions();
-    private ArrayList<LatLng> latlngs = new ArrayList<>();
+    private ArrayList<LatLng> arr_latlngs = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,13 +89,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private void addMarkers() {
         LatLng latlng;
         /* get a random number of markers from 3 (min) to 20 (max) */
-        int maxValue = (int) Math.round(Math.random() * (200 - 3));
+        int maxValue = (int) Math.round(Math.random() * (20 - 3));
 
         for (int i = 0; i <= maxValue; i++) {
-            latlngs.add(getRandomLatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude(), 1000));
+            arr_latlngs.add(getRandomLatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude(), 500));
         }
 
-        for (LatLng point : latlngs) {
+        for (LatLng point : arr_latlngs) {
             int distance = CalculationByDistance(new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude()), point);
             mMap.addMarker(new MarkerOptions()
                     .title("Silver mine")
@@ -133,7 +134,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     @Override
     public void onLocationChanged(Location location) {
-
         mLastLocation = location;
         if (mCurrLocationMarker != null) {
             mCurrLocationMarker.remove();
@@ -141,24 +141,38 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         //Place current location marker
         LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
-        MarkerOptions markerOptions = new MarkerOptions();
-        markerOptions.position(latLng);
-        markerOptions.title("Current Position");
-        markerOptions.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_MAGENTA));
+        MarkerOptions markerOptions = (new MarkerOptions()
+                .position(latLng)
+                .title("I'm here")
+                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW)));
         mCurrLocationMarker = mMap.addMarker(markerOptions);
 
         //move map camera
         mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
-        mMap.animateCamera(CameraUpdateFactory.zoomTo(16));
+        mMap.animateCamera(CameraUpdateFactory.zoomTo(17));
 
         //stop location updates
         if (mGoogleApiClient != null) {
             LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
         }
 
-        // get the neerest points marked
+        /* get the nearest points marked */
         if (mCurrLocationMarker != null) {
             addMarkers();
+
+            /* see if we are near any marker, if yes let us show the activity camera */
+            if (closestMarker()) {
+                View catchItButton = findViewById(R.id.CatchItButton);
+                catchItButton.setVisibility(View.VISIBLE);
+                catchItButton.setOnClickListener(new View.OnClickListener() {
+
+                    /* in case of clicking on the button let us open the activity camera */
+                    @Override
+                    public void onClick(View v) {
+                        startActivity(new Intent(MapsActivity.this, FullscreenCameraActivity.class));
+                    }
+                });
+            }
         }
     }
 
@@ -259,5 +273,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         double foundLongitude = y + longitude;
 
         return new LatLng(foundLatitude, foundLongitude);
+    }
+
+    private boolean closestMarker() {
+        for (LatLng point : arr_latlngs) {
+            if (CalculationByDistance(mCurrLocationMarker.getPosition(), point) <= 200) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }
