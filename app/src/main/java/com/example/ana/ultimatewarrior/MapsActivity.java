@@ -87,40 +87,21 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private void addMarkers() {
         LatLng latlng;
-        latlngs.add(getRandomLatLng());
-        latlngs.add(getRandomLatLng());
-        latlngs.add(getRandomLatLng());
-        latlngs.add(getRandomLatLng());
+        /* get a random number of markers from 3 (min) to 20 (max) */
+        int maxValue = (int) Math.round(Math.random() * (200 - 3));
+
+        for (int i = 0; i <= maxValue; i++) {
+            latlngs.add(getRandomLatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude(), 1000));
+        }
 
         for (LatLng point : latlngs) {
             int distance = CalculationByDistance(new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude()), point);
             mMap.addMarker(new MarkerOptions()
                     .title("Silver mine")
                     .snippet("distance: " + String.valueOf(distance) + "m")
-                    .position(point));
+                    .position(point)
+                    .icon(BitmapDescriptorFactory.fromResource(R.drawable.common_ic_googleplayservices)));
         }
-    }
-
-    private LatLng getRandomLatLng() {
-        //Position, decimal degrees
-        float lat = (float) mLastLocation.getLatitude();
-        float lon = (float) mLastLocation.getLongitude();
-
-        //Earth’s radius, sphere
-        int R = 6378137;
-
-        //offsets in meters (random values from 10 until 500)
-        Random rand = new Random();
-        int Low = 10;
-        int High = 500;
-        int dn = rand.nextInt(High - Low) + Low;
-        int de = rand.nextInt(High - Low) + Low;
-
-        //Coordinate offsets in radians
-        float dLat = (float) (dn / R);
-        float dLon = (float) (de / (R * Math.cos(Math.PI * lat / 180)));
-
-        return new LatLng(lat + dLat * 180 / Math.PI, lon + dLon * 180 / Math.PI);
     }
 
     protected synchronized void buildGoogleApiClient() {
@@ -256,5 +237,27 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         Location.distanceBetween(StartP.latitude, StartP.longitude, EndP.latitude, EndP.longitude, results);
 
         return (int) results[0];
+    }
+
+    private LatLng getRandomLatLng(double latitude, double longitude, int radius) {
+        Random random = new Random();
+
+        // Convert radius from meters to degrees
+        double radiusInDegrees = radius / 111000f;
+
+        double u = random.nextDouble();
+        double v = random.nextDouble();
+        double w = radiusInDegrees * Math.sqrt(u);
+        double t = 2 * Math.PI * v;
+        double x = w * Math.cos(t);
+        double y = w * Math.sin(t);
+
+        // Adjust the x-coordinate for the shrinking of the east-west distances
+        double new_x = x / Math.cos(longitude);
+
+        double foundLatitude = new_x + latitude;
+        double foundLongitude = y + longitude;
+
+        return new LatLng(foundLatitude, foundLongitude);
     }
 }
