@@ -165,11 +165,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 View catchItButton = findViewById(R.id.CatchItButton);
                 catchItButton.setVisibility(View.VISIBLE);
                 catchItButton.setOnClickListener(new View.OnClickListener() {
-
                     /* in case of clicking on the button let us open the activity camera */
                     @Override
                     public void onClick(View v) {
-                        startActivity(new Intent(MapsActivity.this, FullscreenCameraActivity.class));
+                        startActivity(new Intent(MapsActivity.this, CameraActivity.class));
                     }
                 });
             }

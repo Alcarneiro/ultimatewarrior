@@ -10,10 +10,13 @@ android {
         targetSdkVersion 23
         versionCode 1
         versionName "1.0"
+        // Enabling multidex support.
+        multiDexEnabled true
+
     }
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
@@ -25,4 +28,5 @@ dependencies {
     compile 'com.android.support:appcompat-v7:23.4.0'
     compile 'com.google.android.gms:play-services:9.2.1'
     compile 'com.android.support:support-v4:23.4.0'
+    compile 'com.android.support:design:23.4.0'
 }

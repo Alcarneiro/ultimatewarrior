@@ -19,6 +19,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|center"
         android:layout_marginBottom="20dp"
-        android:text="Catch it!"
+        android:background="@drawable/map_catchit_button"
+        android:text="@string/catch_it"
         android:visibility="invisible" />
 </FrameLayout>
