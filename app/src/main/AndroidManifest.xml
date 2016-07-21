@@ -8,7 +8,6 @@
     <uses-feature
         android:name="android.hardware.camera"
         android:required="true" />
-    <uses-feature android:name="android.hardware.camera.autofocus" />
 
     <application
         android:allowBackup="true"
@@ -31,18 +30,23 @@
 
         <activity
             android:name=".LoginActivity"
-            android:label="@string/sign_in">
+            android:label="@string/sign_in"
+            android:theme="@style/splashScreenTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
             android:name=".MapsActivity"
             android:label="@string/title_activity_maps"
-            android:theme="@style/splashScreenTheme" />
-        <activity android:name=".CameraActivity"></activity>
+            android:theme="@android:style/Theme.Holo.NoActionBar.Fullscreen" />
+
+        <activity
+            android:name=".CameraActivity"
+            android:label="@string/title_activity_camera"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Holo.NoActionBar.Fullscreen" />
     </application>
 
 </manifest>

@@ -1,11 +1,10 @@
 <resources>
     <string name="app_name">Ultimate Warrior</string>
-    <string name="title_activity_maps">Map</string>
 
-    <string name="title_activity_fullscreen_camera">FullscreenCameraActivity</string>
-    <string name="dummy_button">Dummy Button</string>
-    <string name="dummy_content">DUMMY\nCONTENT</string>
+    <string name="title_activity_maps">Map</string>
     <string name="title_activity_login">Sign in</string>
+    <string name="title_activity_camera">Camera</string>
+
     <string name="catch_it">Catch it!</string>
     <string name="sign_in">Sign in</string>
 
