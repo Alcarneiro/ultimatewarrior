@@ -2,7 +2,6 @@
     <string name="app_name">Ultimate Warrior</string>
 
     <string name="title_activity_maps">Map</string>
-    <string name="title_activity_login">Sign in</string>
     <string name="title_activity_camera">Camera</string>
 
     <string name="catch_it">Catch it!</string>
@@ -17,5 +16,4 @@
     <string name="error_invalid_password">This password is too short</string>
     <string name="error_incorrect_password">This password is incorrect</string>
     <string name="error_field_required">This field is required</string>
-    <string name="title_activity_amera">ameraActivity</string>
 </resources>

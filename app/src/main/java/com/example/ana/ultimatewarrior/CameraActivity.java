@@ -11,8 +11,8 @@ import java.util.List;
 
 public class CameraActivity extends Activity implements SurfaceHolder.Callback {
 
-    Camera mCamera;
-    SurfaceView mPreview;
+    private Camera mCamera;
+    private SurfaceView mPreview;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

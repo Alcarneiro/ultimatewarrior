@@ -6,6 +6,7 @@ import android.content.pm.PackageManager;
 import android.location.Location;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
@@ -34,13 +35,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         GoogleApiClient.OnConnectionFailedListener,
         LocationListener {
 
-    public static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
-    GoogleApiClient mGoogleApiClient;
-    Location mLastLocation;
-    Marker mCurrLocationMarker;
-    LocationRequest mLocationRequest;
+    private static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
+    private final ArrayList<LatLng> arr_latlngs = new ArrayList<>();
+    private GoogleApiClient mGoogleApiClient;
+    private Location mLastLocation;
+    private Marker mCurrLocationMarker;
     private GoogleMap mMap;
-    private ArrayList<LatLng> arr_latlngs = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,12 +87,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     private void addMarkers() {
-        LatLng latlng;
         /* get a random number of markers from 3 (min) to 20 (max) */
         int maxValue = (int) Math.round(Math.random() * (20 - 3));
 
         for (int i = 0; i <= maxValue; i++) {
-            arr_latlngs.add(getRandomLatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude(), 500));
+            arr_latlngs.add(getRandomLatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude()));
         }
 
         for (LatLng point : arr_latlngs) {
@@ -105,7 +104,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
     }
 
-    protected synchronized void buildGoogleApiClient() {
+    private synchronized void buildGoogleApiClient() {
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .addConnectionCallbacks(this)
                 .addOnConnectionFailedListener(this)
@@ -116,7 +115,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     @Override
     public void onConnected(Bundle bundle) {
-        mLocationRequest = new LocationRequest();
+        LocationRequest mLocationRequest = new LocationRequest();
         mLocationRequest.setInterval(1000);
         mLocationRequest.setFastestInterval(1000);
         mLocationRequest.setPriority(LocationRequest.PRIORITY_BALANCED_POWER_ACCURACY);
@@ -176,11 +175,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     @Override
-    public void onConnectionFailed(ConnectionResult connectionResult) {
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
 
     }
 
-    public boolean checkLocationPermission() {
+    private void checkLocationPermission() {
         if (ContextCompat.checkSelfPermission(this,
                 Manifest.permission.ACCESS_FINE_LOCATION)
                 != PackageManager.PERMISSION_GRANTED) {
@@ -205,14 +204,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
                         MY_PERMISSIONS_REQUEST_LOCATION);
             }
-            return false;
-        } else {
-            return true;
         }
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
         switch (requestCode) {
             case MY_PERMISSIONS_REQUEST_LOCATION: {
                 // If request is cancelled, the result arrays are empty.
@@ -236,7 +232,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     // Permission denied, Disable the functionality that depends on this permission.
                     Toast.makeText(this, "permission denied", Toast.LENGTH_LONG).show();
                 }
-                return;
             }
 
             // other 'case' lines to check for other permissions this app might request.
@@ -245,18 +240,18 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     /* calculate distance between 2 points */
-    public int CalculationByDistance(LatLng StartP, LatLng EndP) {
+    private int CalculationByDistance(LatLng StartP, LatLng EndP) {
         float[] results = new float[1];
         Location.distanceBetween(StartP.latitude, StartP.longitude, EndP.latitude, EndP.longitude, results);
 
         return (int) results[0];
     }
 
-    private LatLng getRandomLatLng(double latitude, double longitude, int radius) {
+    private LatLng getRandomLatLng(double latitude, double longitude) {
         Random random = new Random();
 
-        // Convert radius from meters to degrees
-        double radiusInDegrees = radius / 111000f;
+        // Convert radius from meters to degrees (radius is 500)
+        double radiusInDegrees = 500 / 111000f;
 
         double u = random.nextDouble();
         double v = random.nextDouble();
