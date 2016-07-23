@@ -6,6 +6,7 @@
 
     <string name="catch_it">Catch it!</string>
     <string name="sign_in">Sign in</string>
+    <string name="gold_mine">Gold mine</string>
 
     <!-- Strings related to login -->
     <string name="prompt_email">Email</string>

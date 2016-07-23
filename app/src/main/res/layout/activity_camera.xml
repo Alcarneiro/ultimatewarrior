@@ -3,6 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:animateLayoutChanges="true"
     android:paddingBottom="0dp"
     android:paddingLeft="0dp"
     android:paddingRight="0dp"
@@ -15,11 +16,12 @@
         android:layout_height="fill_parent" />
 
     <ImageView
-        android:id="@+id/gold_mine_1"
+        android:id="@+id/imageview_gold_mine"
         android:layout_width="200dp"
         android:layout_height="353dp"
         android:layout_gravity="center"
-        android:src="@drawable/gold_mine_1"
+        android:contentDescription="@string/gold_mine"
+        android:src="@drawable/gold_mine"
         android:visibility="visible" />
 
     <Button
