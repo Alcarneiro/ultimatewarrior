@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -10,8 +9,8 @@
     android:paddingTop="0dp"
     tools:context="com.example.ana.ultimatewarrior.CameraActivity">
 
-    <SurfaceView
-        android:id="@+id/preview"
+    <TextureView
+        android:id="@+id/texture"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent" />
 
@@ -23,14 +22,5 @@
         android:contentDescription="@string/gold_mine"
         android:src="@drawable/gold_mine"
         android:visibility="visible" />
-
-    <Button
-        android:id="@+id/CatchItButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|center"
-        android:layout_marginBottom="20dp"
-        android:background="@drawable/map_catchit_button"
-        android:text="@string/catch_it" />
 
 </FrameLayout>

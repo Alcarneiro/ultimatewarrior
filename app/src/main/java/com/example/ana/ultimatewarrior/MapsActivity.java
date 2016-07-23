@@ -36,7 +36,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
     private final ArrayList<LatLng> arr_latlngs = new ArrayList<>();
-    boolean mResolvingError = false;
     private GoogleApiClient mGoogleApiClient;
     private Location mLastLocation;
     private GoogleMap mMap;
