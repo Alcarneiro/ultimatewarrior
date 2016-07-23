@@ -24,7 +24,6 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.util.ArrayList;
@@ -37,9 +36,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
     private final ArrayList<LatLng> arr_latlngs = new ArrayList<>();
+    boolean mResolvingError = false;
     private GoogleApiClient mGoogleApiClient;
     private Location mLastLocation;
-    private Marker mCurrLocationMarker;
     private GoogleMap mMap;
 
     @Override
@@ -134,17 +133,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onLocationChanged(Location location) {
         mLastLocation = location;
-        if (mCurrLocationMarker != null) {
-            mCurrLocationMarker.remove();
-        }
 
         //Place current location marker
         LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
-        MarkerOptions markerOptions = (new MarkerOptions()
-                .position(latLng)
-                .title("I'm here")
-                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW)));
-        mCurrLocationMarker = mMap.addMarker(markerOptions);
 
         //move map camera
         mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
@@ -156,21 +147,19 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
 
         /* get the nearest points marked */
-        if (mCurrLocationMarker != null) {
-            addMarkers();
+        addMarkers();
 
-            /* see if we are near any marker, if yes let us show the activity camera */
-            if (closestMarker()) {
-                View catchItButton = findViewById(R.id.CatchItButton);
-                catchItButton.setVisibility(View.VISIBLE);
-                catchItButton.setOnClickListener(new View.OnClickListener() {
-                    /* in case of clicking on the button let us open the activity camera */
-                    @Override
-                    public void onClick(View v) {
-                        startActivity(new Intent(MapsActivity.this, CameraActivity.class));
-                    }
-                });
-            }
+        /* see if we are near any marker, if yes let us show the activity camera */
+        if (closestMarker()) {
+            View catchItButton = findViewById(R.id.CatchItButton);
+            catchItButton.setVisibility(View.VISIBLE);
+            catchItButton.setOnClickListener(new View.OnClickListener() {
+                /* in case of clicking on the button let us open the activity camera */
+                @Override
+                public void onClick(View v) {
+                    startActivity(new Intent(MapsActivity.this, CameraActivity.class));
+                }
+            });
         }
     }
 
@@ -239,14 +228,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         }
     }
 
-    /* calculate distance between 2 points */
-    private int CalculationByDistance(LatLng StartP, LatLng EndP) {
-        float[] results = new float[1];
-        Location.distanceBetween(StartP.latitude, StartP.longitude, EndP.latitude, EndP.longitude, results);
-
-        return (int) results[0];
-    }
-
     private LatLng getRandomLatLng(double latitude, double longitude) {
         Random random = new Random();
 
@@ -271,11 +252,20 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private boolean closestMarker() {
         for (LatLng point : arr_latlngs) {
-            if (CalculationByDistance(mCurrLocationMarker.getPosition(), point) <= 200) {
+
+            if (CalculationByDistance(new LatLng(mLastLocation.getLatitude(), mLastLocation.getLongitude()), point) <= 200) {
                 return true;
             }
         }
 
         return false;
+    }
+
+    /* calculate distance between 2 points */
+    private int CalculationByDistance(LatLng StartP, LatLng EndP) {
+        float[] results = new float[1];
+        Location.distanceBetween(StartP.latitude, StartP.longitude, EndP.latitude, EndP.longitude, results);
+
+        return (int) results[0];
     }
 }
