@@ -7,13 +7,19 @@
     <string name="catch_it">Catch it!</string>
     <string name="gold_mine">Gold mine</string>
 
-    <!-- Strings related to login -->
-    <string name="prompt_email">Email</string>
-    <string name="prompt_password">Password (optional)</string>
-    <string name="action_sign_in">Sign in or register</string>
-    <string name="action_sign_in_short">Sign in</string>
-    <string name="error_invalid_email">This email address is invalid</string>
-    <string name="error_invalid_password">This password is too short</string>
-    <string name="error_incorrect_password">This password is incorrect</string>
-    <string name="error_field_required">This field is required</string>
+    <!-- START Strings related to login -->
+    <string name="google_login_title_text">Google Sign-In</string>
+    <string name="signed_in_fmt">Signed in as: %s</string>
+    <string name="signed_out">Signed out</string>
+    <string name="loading">Loading…</string>
+
+    <!-- Button labels -->
+
+    <!-- Content Description for images -->
+    <string name="desc_google_icon">Google Logo</string>
+
+    <!-- TODO(user): replace with your real server client ID -->
+    <!-- Server Client ID.  This should be a valid Web OAuth 2.0 Client ID obtained
+         from https://console.developers.google.com/ -->
+    <!-- END Strings related to login -->
 </resources>

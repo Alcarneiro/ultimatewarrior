@@ -11,6 +11,7 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.content.ContextCompat;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -23,6 +24,7 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
@@ -46,6 +48,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         setTheme(R.style.AppTheme);
 
         super.onCreate(savedInstanceState);
+
+        // Set status bar to transparent if the Android version is lower than Jellybean, use this call to hide the status bar.
+        if (Build.VERSION.SDK_INT < 16) {
+            getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        } else {
+            getWindow().setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        }
+
         setContentView(R.layout.activity_maps);
 
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -68,7 +78,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-        mMap.setMapType(GoogleMap.MAP_TYPE_HYBRID);
+        mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+        mMap.setBuildingsEnabled(false);
+        mMap.setIndoorEnabled(true);
+        mMap.setTrafficEnabled(false);
 
         //Initialize Google Play Services
         if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -136,9 +149,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         //Place current location marker
         LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
 
-        //move map camera
-        mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng));
-        mMap.animateCamera(CameraUpdateFactory.zoomTo(17));
+        // Construct a CameraPosition focusing on Mountain View and animate the camera to that position.
+        CameraPosition cameraPosition = new CameraPosition.Builder()
+                .target(latLng)             // Sets the center of the map to Mountain View
+                .zoom(18)                   // Sets the zoom
+                //.bearing(90)                // Sets the orientation of the camera to east
+                .tilt(60)                   // Sets the tilt of the camera to X degrees
+                .build();                   // Creates a CameraPosition from the builder
+        mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
 
         //stop location updates
         if (mGoogleApiClient != null) {

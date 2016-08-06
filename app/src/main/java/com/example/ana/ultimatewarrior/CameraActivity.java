@@ -36,7 +36,6 @@ public class CameraActivity extends Activity {
 
     private final static String TAG = "CameraActivity";
     private Size mPreviewSize;
-
     private TextureView mTextureView;
     private CameraDevice mCameraDevice;
     private CaptureRequest.Builder mPreviewBuilder;
@@ -93,7 +92,14 @@ public class CameraActivity extends Activity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
+        // Set status bar to transparent if the Android version is lower than Jellybean, use this call to hide the status bar.
+        if (Build.VERSION.SDK_INT < 16) {
+            getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        } else {
+            getWindow().setFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS, WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        }
+
         setContentView(R.layout.activity_camera);
 
         mTextureView = (TextureView) findViewById(R.id.texture);
